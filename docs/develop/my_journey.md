@@ -27,3 +27,30 @@
 - Resource: [FastAPI - Udemy](https://www.udemy.com/course/fastapi-the-complete-course/)
 - Focus: REST CRUD patterns, dependency injection, Pydantic models, auth (bcrypt + JWT), SQLAlchemy/PostgreSQL integration, pytest testing, and deployment steps.
 - Applied: built a full-stack todo app (auth + CRUD on Postgres) to mirror eQueue needs: secure enqueue endpoints, dependency-managed DB sessions, JWT-protected admin operations, and confidence to add tests for queue APIs.
+
+## Phase 1 Complete — Foundation & Architecture
+
+**Status:** Completed
+
+This phase focused on understanding task queues as distributed systems before writing any production code.
+
+### Key outcomes
+- Designed and documented an end-to-end architecture for a PostgreSQL-backed task queue (FastAPI → DB → workers → results).
+- Finalized a minimal job state machine (`queued → running → succeeded | dead | cancelled`) with retries modeled via scheduling (`run_at`), not extra states.
+- Mapped Celery and AWS SQS concepts (task registry, retries, visibility timeout, DLQ) to PostgreSQL primitives (row locks, leases, terminal states).
+- Identified core failure modes (worker crashes, network issues, DB outages) and corresponding mitigations to test later.
+
+### Major conceptual takeaways
+- **Atomicity vs idempotency:** atomic transactions coordinate ownership; idempotent handlers tolerate retries and at-least-once execution.
+- **Leasing over locking:** short claim transactions + time-based leases scale better than long-held locks.
+- **Retries are control flow:** failed attempts are events, not states.
+- **PostgreSQL as a coordinator:** with `FOR UPDATE SKIP LOCKED`, Postgres can safely replace a message broker for learning-scale systems.
+
+### Artifacts produced
+- Architecture diagram and flow description
+- Job state machine specification
+- Celery source takeaways
+- SQS → PostgreSQL concept mapping
+- Failure modes and mitigation checklist
+
+Phase 2 will focus on implementing the database layer and worker claiming logic based on these decisions.

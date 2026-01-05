@@ -2,10 +2,10 @@
 Practical learning to unlock each phase of the eQueue roadmap. Check items off as you gain confidence and capture notes/diagrams in your docs.
 
 ## Phase 1 — Foundation & Architecture
-- [ ] Sketch end-to-end flow (FastAPI → PostgreSQL → workers → results) with bottlenecks and worker discovery strategy.
-- [ ] Review Celery’s core patterns (broker, task registry, retries, monitoring) from source for 1–2 hours; log takeaways.
-- [ ] Read AWS SQS concepts (visibility timeout, dead-letter queues, delays) and map parallels to PostgreSQL.
-- [ ] List failure modes (network, worker crash, DB outage) and mitigation options to test later.
+- [✅] Sketch end-to-end flow (FastAPI → PostgreSQL → workers → results) with bottlenecks and worker discovery strategy.
+- [✅] Review Celery’s core patterns (broker, task registry, retries, monitoring) from source for 1–2 hours; log takeaways.
+- [✅] Read AWS SQS concepts (visibility timeout, dead-letter queues, delays) and map parallels to PostgreSQL.
+- [✅] List failure modes (network, worker crash, DB outage) and mitigation options to test later.
 
 ## Phase 2 — Database Layer
 - [ ] Define job state diagram and required columns (payload, attempts, backoff, error logs, timestamps).
