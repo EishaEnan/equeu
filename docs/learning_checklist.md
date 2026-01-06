@@ -8,12 +8,12 @@ Practical learning to unlock each phase of the eQueue roadmap. Check items off a
 - [✅] List failure modes (network, worker crash, DB outage) and mitigation options to test later.
 
 ## Phase 2 — Database Layer
-- [ ] Define job state diagram and required columns (payload, attempts, backoff, error logs, timestamps).
-- [ ] Research safe job-claiming patterns in PostgreSQL (`SELECT ... FOR UPDATE SKIP LOCKED`, advisory locks).
-- [ ] Decide on migration approach (ordered SQL files + tracking table) and indexes for status/time-based queries.
+- [✅] Define job state diagram and required columns (payload, attempts, backoff, error logs, timestamps).
+- [✅] Research safe job-claiming patterns in PostgreSQL (`SELECT ... FOR UPDATE SKIP LOCKED`, advisory locks).
+- [✅] Decide on migration approach (ordered SQL files + tracking table) and indexes for status/time-based queries.
 
 ## Phase 3 — Worker Logic
-- [ ] Study task registry patterns (decorators, import discovery) and note a minimal registry API you want.
+- [✅] Study task registry patterns (decorators, import discovery) and note a minimal registry API you want.
 - [ ] Deepen asyncio knowledge on timeouts/cancellation (`asyncio.wait_for`, shielded tasks) and error capture.
 - [ ] Compare argument serialization options (JSON vs pickle vs msgpack) and choose constraints for safety.
 
