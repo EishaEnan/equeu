@@ -70,3 +70,32 @@ Phase 2 will focus on implementing the database layer and worker claiming logic 
 - No worker execution code yet.
 - No ORM or migration framework.
 - No performance tuning beyond correctness-focused indexing.
+
+## Phase 3 — Worker Logic (Conceptual Foundations)
+
+**Status:** Completed
+
+This phase focused on understanding execution semantics and constraints before
+implementing workers.
+
+### Key learnings
+- Designed and prototyped a minimal task registry using explicit, namespaced task
+  identifiers decoupled from Python module paths.
+- Learned how asyncio enforces execution limits via cancellation rather than
+  preemption (`asyncio.wait_for`, `task.cancel()`).
+- Observed that `finally` blocks run reliably on both timeouts and cancellation,
+  making them the correct place for cleanup and state reconciliation.
+- Clarified error classification boundaries (timeout vs cancellation vs crash)
+  to inform future retry logic.
+- Chose JSON-only serialization for job payloads and results, prioritizing safety,
+  debuggability, and alignment with PostgreSQL `jsonb`.
+
+### Design implications for eQueue
+- Workers must treat timeouts as cancellation events.
+- Cleanup and job state updates must live in `finally` blocks.
+- Jobs should reference domain data by identifier (e.g. `puzzle_id`), not embed
+  large datasets in payloads.
+- Task identity (behavior) must remain distinct from task inputs (data).
+
+This phase established the execution and safety model required to implement
+workers without premature complexity.
