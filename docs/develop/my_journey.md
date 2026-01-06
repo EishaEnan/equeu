@@ -54,3 +54,19 @@ This phase focused on understanding task queues as distributed systems before wr
 - Failure modes and mitigation checklist
 
 Phase 2 will focus on implementing the database layer and worker claiming logic based on these decisions.
+
+
+## Phase 2 Complete — Database Layer & Coordination
+
+**Focus:** translating architectural decisions into concrete database structures and coordination logic.
+
+### Objectives
+- Finalize the jobs table schema and constraints based on the state machine.
+- Document and validate a safe job-claiming strategy using PostgreSQL row-level locking.
+- Define a simple, forward-only migration approach suitable for early development.
+- Ensure indexes and access patterns align with worker and monitoring queries.
+
+### Scope boundaries
+- No worker execution code yet.
+- No ORM or migration framework.
+- No performance tuning beyond correctness-focused indexing.
