@@ -24,7 +24,7 @@ def utcnow() -> datetime:
 
 class JobRepo(Protocol):
     async def insert_job(self, *, created_by: str, req: EnqueueJobRequest, now: datetime) -> JobPublic: ...
-    async def get_job(self, *, job_id: UUID) -> JobPublic | None: ...
+    async def get_job(self, *, created_by: str, job_id: UUID) -> JobPublic | None: ...
     async def list_jobs(self, *, created_by: str, q: JobListQuery) -> JobListPage: ...
     async def cancel_job(self, *, created_by: str, job_id: UUID, now: datetime) -> tuple[JobPublic | None, bool]: ...
     # returns: (job_or_none, accepted_running_cancel)
@@ -52,9 +52,9 @@ class QueueClient:
         return await self.repo.insert_job(created_by=created_by, req=req, now=now)
     
     async def get(self, *, created_by: str, job_id: UUID) -> JobPublic:
-        job = await self.repo.get_job(job_id=job_id)
+        job = await self.repo.get_job(created_by=created_by,job_id=job_id)
         # ownership enforecement: return 404 if mismatch (don't leak existence)
-        if job is None or job.created_by != created_by:
+        if job is None:
             raise JobNotFoundError()
         return job
     

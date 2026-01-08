@@ -117,7 +117,7 @@ class JobListQuery(BaseModel):
     task_name: str | None = None
     queue: str | None = None
 
-    crated_after: datetime | None = None
+    created_after: datetime | None = None
     created_before: datetime | None = None
 
     limit: int = Field(50, ge=1, le=200)
