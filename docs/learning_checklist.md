@@ -18,7 +18,7 @@ Practical learning to unlock each phase of the eQueue roadmap. Check items off a
 - [✅] Compare argument serialization options (JSON vs pickle vs msgpack) and choose constraints for safety.
 
 ## Phase 4 — FastAPI Integration
-- [ ] Draft API contract for enqueue/status/list/cancel with auth and rate-limiting strategy.
+- [✅] Draft API contract for enqueue/status/list/cancel with auth and rate-limiting strategy.
 - [ ] Review pagination and filtering patterns in FastAPI/Pydantic for job lists.
 - [ ] Outline a `QueueClient` interface and how it talks to the DB/worker layer.
 
