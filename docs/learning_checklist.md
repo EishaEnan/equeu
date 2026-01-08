@@ -14,8 +14,8 @@ Practical learning to unlock each phase of the eQueue roadmap. Check items off a
 
 ## Phase 3 — Worker Logic
 - [✅] Study task registry patterns (decorators, import discovery) and note a minimal registry API you want.
-- [ ] Deepen asyncio knowledge on timeouts/cancellation (`asyncio.wait_for`, shielded tasks) and error capture.
-- [ ] Compare argument serialization options (JSON vs pickle vs msgpack) and choose constraints for safety.
+- [✅] Deepen asyncio knowledge on timeouts/cancellation (`asyncio.wait_for`, shielded tasks) and error capture.
+- [✅] Compare argument serialization options (JSON vs pickle vs msgpack) and choose constraints for safety.
 
 ## Phase 4 — FastAPI Integration
 - [ ] Draft API contract for enqueue/status/list/cancel with auth and rate-limiting strategy.
