@@ -24,6 +24,7 @@ from equeue.api.models.jobs import (
     JobPublic,
     JobStatus,
 )
+from tests.utils import make_job
 
 # ------------------------------------------------------------------
 # Helpers
@@ -37,23 +38,7 @@ def now() -> datetime:
 @pytest.fixture
 def job_factory(now):
     def _make_job(*, status: JobStatus = JobStatus.queued, job_id: UUID | None = None) -> JobPublic:
-        job_model = JobPublic(
-            id=job_id or uuid4(),
-            task_name="puzzles.extract_mate_tag",
-            status=status,
-            queue="default",
-            payload={},
-            priority=0,
-            run_at=now,
-            attempts=0,
-            max_attempts=25,
-            created_by="user-1",
-            created_at=now,
-            updated_at=now,
-            cancel_requested_at=None,
-            last_error=None,
-        )
-        return job_model
+        return make_job(status=status, job_id=job_id, now=now)
     return _make_job
 
 
