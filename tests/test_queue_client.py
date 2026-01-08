@@ -48,8 +48,11 @@ class FakeRepo:
         self.jobs[job.id] = job
         return job
 
-    async def get_job(self, *, job_id: UUID) -> JobPublic | None:
-        return self.jobs.get(job_id)
+    async def get_job(self, *, created_by: str, job_id: UUID) -> JobPublic | None:
+        job = self.jobs.get(job_id)
+        if job is None or job.created_by != created_by:
+            return None
+        return job
 
     async def list_jobs(self, *, created_by: str, q: JobListQuery) -> JobListPage:
         # minimal fake: return all jobs for created_by, ignore filters for now
