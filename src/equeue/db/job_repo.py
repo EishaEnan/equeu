@@ -7,7 +7,8 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import text
+from sqlalchemy import text, bindparam
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from equeue.api.models.jobs import (
@@ -54,7 +55,7 @@ def _row_to_job(row: Any) -> JobPublic:
 
 
 @dataclass(frozen=True)
-class SQLAlchemyJobRepo:
+class SqlAlchemyJobRepo:
     """
     Non-leaky repo: get/cancel are scoped by created_by in SQL.
     """
@@ -68,7 +69,7 @@ class SQLAlchemyJobRepo:
                 last_error, created_by, cancel_requested_at, idempotency_key
             )
             VALUES (
-                :task_name, 'queued', :queue, :payload::jsonb, :priority, :run_at,
+                :task_name, 'queued', :queue, :payload, :priority, :run_at,
                 0, :max_attempts, NULL, :created_by, NULL, :idempotency_key     
             )
             ON CONFLICT (created_by, idempotency_key)
@@ -76,7 +77,7 @@ class SQLAlchemyJobRepo:
             DO UPDATE SET idempotency_key = EXCLUDED.idempotency_key
             RETURNING *
             """
-        )
+        ).bindparams(bindparam("payload", type_=JSONB))
 
         params = {
             "task_name": req.task_name,
@@ -123,19 +124,21 @@ class SQLAlchemyJobRepo:
             SELECT *
             FROM jobs
             WHERE created_by = :created_by
-                AND (:statuses_is_null OR  status = ANY(:statuses::job_status[]))
-                AND (:queue_is_null OR queue = :queue)
-                AND (:task_is_null OR task_name = :task_name)
-                AND (:created_after_is_null OR created_at >= :created_after)
-                AND (:created_before_is_null OR created_at <= :created_before)
-                AND (
-                        :cursor_created_at_is_null
-                        OR (created_at, id) < (:cursor_created_at, :cursor_id)
+            AND (:statuses_is_null OR status = ANY(CAST(:statuses AS job_status[])))
+            AND (:queue_is_null OR queue = :queue)
+            AND (:task_is_null OR task_name = :task_name)
+            AND (:created_after_is_null OR created_at >= :created_after)
+            AND (:created_before_is_null OR created_at <= :created_before)
+            AND (
+                    :cursor_created_at_is_null
+                    OR (created_at, id) < (:cursor_created_at, :cursor_id)
                 )
             ORDER BY created_at DESC, id DESC
             LIMIT :limit_plus_one
             """
         )
+
+    
 
         params = {
             "created_by": created_by,

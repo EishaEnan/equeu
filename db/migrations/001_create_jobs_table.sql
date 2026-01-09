@@ -1,7 +1,7 @@
--------For uuid generation ---
+---- For uuid generation
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
------------ Enum for status---
+----- Enum for status
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'job_status') THEN
@@ -14,7 +14,7 @@ BEGIN
         );
     END IF;
 END $$;
-------------Jobs Table -------
+---- jobs Table
 CREATE TABLE IF NOT EXISTS jobs(
     id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     task_name           text NOT NULL,
@@ -68,20 +68,20 @@ CREATE TABLE IF NOT EXISTS jobs(
 );
 
 
------------ Indexes ----------
+----- Indexes
 
----- Claim scan: runnable queued jobs by queue. run_at, priority
+----- Claim scan: runnable queued jobs by queue. run_at, priority
 
 CREATE INDEX IF NOT EXISTS jobs_runnable_idx
     ON jobs (queue, run_at, priority DESC, created_at, id)
     WHERE status = 'queued';
 
----  Re-claim 'stuck' running jobs whose lease expired: locked_until < now()
+----  Re-claim 'stuck' running jobs whose lease expired: locked_until < now()
 CREATE INDEX IF NOT EXISTS jobs_expired_lease_idx
     ON jobs (queue, locked_until, id)
     WHERE status = 'running' AND locked_until IS NOT NULL;
 
---- Dashboard filters
+---- Dashboard filters
 CREATE INDEX IF NOT EXISTS jobs_status_update_idx
     ON jobs (status, updated_at DESC);
 
@@ -91,16 +91,16 @@ CREATE INDEX IF NOT EXISTS jobs_queue_status_idx
 CREATE INDEX IF NOT EXISTS jobs_task_name_idx
     ON jobs (task_name);
 
---- Idempotency
+---- Idempotency
 CREATE UNIQUE INDEX IF NOT EXISTS jobs_idempotency_uniq
     ON jobs (created_by, idempotency_key)
     WHERE idempotency_key IS NOT NULL;
 
---- Others
+---- Others
 CREATE INDEX IF NOT EXISTS jobs_created_by_status_created_at_idx
     ON jobs (created_by, status, created_at DESC, id DESC);
 
---- updated_at trigger
+---- updated_at trigger
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS trigger AS $$
 BEGIN
